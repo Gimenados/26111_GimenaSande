@@ -92,3 +92,23 @@ marketing_clean = marketing_clean.drop_duplicates()
 # Llamamos a la función para cada DataFrame
 for dataframe, name in [(ventas_clean, "Ventas"), (marketing_clean, "Marketing"), (clientes_clean, "Clientes")]:
     eda(dataframe, f"Análisis exploratorio de {name}")
+
+#3 Agregación
+# Resumir las ventas por categoría de producto y analizar los ingresos generados.
+# Sugerencia: usar .groupby() y .agg() para generar métricas como suma y promedio.
+
+print("Ventas por categoria")
+#Agrego columna total 
+ventas_clean["total"] = ventas_clean["precio"] * ventas_clean["cantidad"]
+#Uso groupby y agg para agregacion y agrupacion
+resumen_categoria = ventas_clean.groupby("categoria").agg(
+    ingresos_totales=("total", "sum"), 
+    ingresos_promedio=("total", "mean"),
+    unidades_vendidas=("cantidad", "sum"),
+    precio_promedio=("precio", "mean"),
+    cantidad_ventas=("id_venta", "count")
+)
+#Order by en categoria 
+resumen_categoria = resumen_categoria.sort_values("ingresos_totales", ascending=False)
+
+print(resumen_categoria)
